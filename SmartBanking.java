@@ -20,8 +20,9 @@ class SmartBanking {
 
         String screen = Dashboard;
 
-        String[][] AccounDetails = new String[0][];
-
+        // String[][] AccounDetails = new String[0][];
+        String[][] AccounDetails = {{"SDB-00001","pravinda","7000"},{"SDB-00002","pravi","7000"},{"SDB-00003","prav","7000"}}; //test case
+        
         main_loop: do {
 
             System.out.print(clear);
@@ -35,9 +36,10 @@ class SmartBanking {
             lbl_main: switch (screen) {
                 case Dashboard:
 
-                    for (int index = 0; index < AccounDetails.length; index++) {
+                    for (int index = 0; index < AccounDetails.length; index++) { 
                         System.out.println(Arrays.toString(AccounDetails[index]));
                     }
+                    System.out.println(isValid("SDB-00003", AccounDetails)); //testing
 
                     System.out.println("[1]. Open New Account");
                     System.out.println("[2]. Deposit Money");
@@ -92,6 +94,7 @@ class SmartBanking {
                             for (int i = 0; i < accName.length(); i++) {
                                 if (!(Character.isLetter(accName.toLowerCase().charAt(i))
                                         || accName.charAt(i) == ' ')) {
+                                            
                                     System.out.print("Invalid Name. Do you want Enter a valid name? (Y/N) >> ");
                                     if (scanner.nextLine().strip().toUpperCase().equals("Y"))
                                         continue loop_name;
@@ -146,5 +149,31 @@ class SmartBanking {
 
             }
         } while (true);
+        
     }
+
+    
+    public static boolean isValid(String accNumber, String[][] accList) {
+        if (accNumber.isBlank() || accNumber.length() != 9 || !accNumber.startsWith("SDB-")) {
+            return false;
+        }
+    
+        for (int i = 4; i < accNumber.length(); i++) {
+            if (!Character.isDigit(accNumber.charAt(i))) {
+                return false;
+            }
+        }
+    
+        for (int k = 0; k < accList.length; k++) {
+            if (accNumber.equals(accList[k][0])) {
+                return true;
+            }
+        }
+    
+        return false;
+    }
+    
+
+   
 }
+
