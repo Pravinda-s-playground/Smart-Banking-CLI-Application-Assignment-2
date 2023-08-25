@@ -24,7 +24,7 @@ class SmartBanking {
         String[][] AccounDetails = { { "SDB-00001", "pravinda", "7000" }, { "SDB-00002", "pravi", "6000" },
                 { "SDB-00003", "prav", "8000" } }; // test case
 
-        main_loop: do {
+         do {
 
             System.out.print(clear);
             String line = String.format("%s%s%s", color_green, "-".repeat(60), reset);
@@ -80,7 +80,7 @@ class SmartBanking {
 
 
                 case Open_New_Acc:
-                    boolean validName = false;
+                    
                     int x = 1, initDepo;
                     String id, accName;
                     loop_name: while (true) {
@@ -158,7 +158,7 @@ class SmartBanking {
 
                             if (AccounDetails[i][0].equals(accNumber)) {
                                 System.out.println("Account Balence : "+AccounDetails[i][2]);
-                                System.out.println("Enter Deposit Amount : ");
+                                System.out.print("Enter Deposit Amount : ");
                                 int depositAmount =scanner.nextInt();
                                 scanner.nextLine();
                                 if(depositAmount>500){
@@ -175,7 +175,104 @@ class SmartBanking {
                             break lbl_main;
                         }
                 } while (true);
-                
+
+                case WithDraw:
+                do {
+                    System.out.print("Add Account Number : ");
+                        String accNumber = scanner.nextLine().strip();
+                        if (!isValid(accNumber, AccounDetails)) {
+                            System.out.println("Account number is not valid");
+                            continue;
+                        }
+                        for (int i = 0; i < AccounDetails.length; i++) {
+
+                            if (AccounDetails[i][0].equals(accNumber)) {
+                                int accountBalence = Integer.valueOf(AccounDetails[i][2]);
+                                System.out.println("Account Balence : "+accountBalence);
+                                System.out.print("Enter Withdraw Amount : ");
+                                int withdrawAmount =scanner.nextInt();
+                                scanner.nextLine();
+                                if(withdrawAmount>100 && accountBalence-withdrawAmount>=500){
+                                    AccounDetails[i][2]=String.valueOf(Integer.valueOf(AccounDetails[i][2])-withdrawAmount);
+                                }else{
+                                    System.out.println("did not succses withdraw ");
+                                }
+                                break;
+                            }
+                        }
+                        System.out.print("Do you want to try Again ? (Y/N) >> ");
+                        if (scanner.nextLine().strip().equalsIgnoreCase("N")) {
+                            screen = Dashboard;
+                            break lbl_main;
+                        }
+                } while (true);
+                case Transfer_Money:
+
+                    do {
+                        int transferIndex =0;
+                        int transfereeIndex=0;
+                        System.out.print("Add Transfer Account Number : ");
+                        String accNumber = scanner.nextLine().strip();
+                        if (!isValid(accNumber, AccounDetails)) {
+                            System.out.println("Account number is not valid");
+                            continue;
+                        }
+                        System.out.print("Add Transferee Account Number : ");
+                        String accNumber2 = scanner.nextLine().strip();
+                        if (!isValid(accNumber, AccounDetails)) {
+                            System.out.println("Account number is not valid");
+                            
+                            continue;
+                        }
+                        
+                        for (int i = 0; i < AccounDetails.length; i++) {
+
+                            if (AccounDetails[i][0].equals(accNumber)) {
+                                System.out.println("Balance : ".concat(AccounDetails[i][2]));
+                                transferIndex=i;
+                                break;
+                            }
+
+                        }
+                        for (int j = 0; j < AccounDetails.length; j++) {
+
+                            if (AccounDetails[j][0].equals(accNumber2)) {
+                                
+                                System.out.println("Balance : ".concat(AccounDetails[j][2]));
+                                transfereeIndex=j;
+                                break;
+                            }
+
+                        }
+                        System.out.print("Enter Transfer Amount : ");
+                        double transferAmount =scanner.nextDouble();
+                        scanner.nextLine();
+                        boolean lessThan100= transferAmount<100;
+                        boolean lessThan500=(Double.valueOf(AccounDetails[transferIndex][2])-(transferAmount+transferAmount*0.02))<500;
+                        if( lessThan100|| lessThan500){
+                            System.out.println("Transfer Amount is not suitabal");
+                            continue;
+                        }else{
+                            Double finalTransferLeftAmount = Double.valueOf(AccounDetails[transferIndex][2])-transferAmount-transferAmount*0.02;
+                            Double finalTransfereeLeftAmount = Double.valueOf(AccounDetails[transfereeIndex][2])+transferAmount;
+                            AccounDetails[transferIndex][2] =  String.valueOf(finalTransferLeftAmount);
+                            AccounDetails[transfereeIndex][2] =  String.valueOf(finalTransfereeLeftAmount);
+
+                            
+                        }
+                        System.out.print("Transfer Succsesfull");
+                        System.out.println();
+                        
+                        System.out.print("Do you want to Open another Account? (Y/N) >> ");
+                        if (scanner.nextLine().strip().toUpperCase().equals("Y")) {
+
+                            continue;
+                        } else {
+                            screen = Dashboard;
+                            break lbl_main;
+                        }
+                    } while (true);
+
                 case Acc_Bal:
 
                     do {
